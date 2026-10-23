@@ -32,7 +32,7 @@ Controller -> Service -> Repository -> Entity (JPA) -> MySQL
                DTOs (never expose entities directly)
 ```
 
-See `docs/architecture.md` for the full request-flow and entity-relationship diagrams.
+
 
 ## Key Design Decisions
 
@@ -122,10 +122,6 @@ Full interactive documentation via Swagger UI once running:
 12. GET  /api/bookings/my
 ```
 
-## Project Status
-
-Individual project, built incrementally across 12 phases, for resume and technical
-interview purposes. Not connected to a real payment gateway (payment is simulated).
 
 ## Future Enhancements
 
