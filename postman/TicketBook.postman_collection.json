@@ -1,0 +1,234 @@
+{
+  "info": {
+    "name": "TicketBook API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "userToken", "value": "" },
+    { "key": "adminToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jagadeswarr\",\n  \"email\": \"jagad@example.com\",\n  \"password\": \"SecurePass123\",\n  \"phone\": \"9999999999\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "pm.environment.set('userToken', response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jagad@example.com\",\n  \"password\": \"SecurePass123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Admin Setup",
+      "item": [
+        {
+          "name": "Create Movie",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/admin/movies",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Inception\",\n  \"genre\": \"SCI-FI\",\n  \"language\": \"ENGLISH\",\n  \"duration\": 148,\n  \"releaseDate\": \"2010-07-16\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Theatre",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/admin/theatres",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"PVR Cinemas\",\n  \"location\": \"Main Street\",\n  \"city\": \"Ongole\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Screen",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/admin/theatres/1/screens",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"screenName\": \"Screen 1\",\n  \"capacity\": 100\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Seat",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/admin/screens/1/seats",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"seatNumber\": \"1\",\n  \"rowNumber\": \"A\",\n  \"seatType\": \"REGULAR\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Browse",
+      "item": [
+        {
+          "name": "Search Movies",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/movies?page=0&size=10" }
+        },
+        {
+          "name": "Create Show",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/admin/shows",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 1,\n  \"screenId\": 1,\n  \"showDate\": \"2026-08-25\",\n  \"startTime\": \"19:00:00\",\n  \"ticketPrice\": 250.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Search Shows",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/shows?page=0&size=10" }
+        },
+        {
+          "name": "View Seat Availability",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/shows/1/seats" }
+        }
+      ]
+    },
+    {
+      "name": "4. Booking",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/bookings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"showId\": 1,\n  \"seatIds\": [1],\n  \"paymentMethod\": \"UPI\"\n}"
+            }
+          }
+        },
+        {
+          "name": "View Booking by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": "{{baseUrl}}/api/bookings/1"
+          }
+        },
+        {
+          "name": "View My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": "{{baseUrl}}/api/bookings/my"
+          }
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": "{{baseUrl}}/api/bookings/1/cancel"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Negative Cases",
+      "item": [
+        {
+          "name": "Unauthorized (no token)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/bookings/my" }
+        },
+        {
+          "name": "Admin API as USER (expect 403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/admin/movies",
+            "body": { "mode": "raw", "raw": "{}" }
+          }
+        },
+        {
+          "name": "Duplicate Seat Booking (expect 409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/bookings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"showId\": 1,\n  \"seatIds\": [1],\n  \"paymentMethod\": \"UPI\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Invalid Show ID (expect 404)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/shows/99999" }
+        }
+      ]
+    }
+  ]
+}

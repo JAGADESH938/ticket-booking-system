@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: ticketbook
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ticketbook_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:ticketbook_user}
+    password: ${DB_PASSWORD:your_strong_password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+jwt:
+  secret: ${JWT_SECRET:this-is-a-placeholder-dev-only-secret-key-change-me-32chars+}
+  expiration-ms: 86400000
